@@ -1,23 +1,25 @@
 import { useState } from 'react';
 
-function FilterableProductTable({ products } : any) {
+function FilterableProductTable(props:{ products  : {}[]}) {
   const [filterText, setFilterText] = useState<string>('');
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
 
   return (
     <div>
       <SearchBar 
-        filterText={filterText} 
-        inStockOnly={inStockOnly} />
+        setFilterText={filterText} 
+        inStockOnly={inStockOnly}
+        onFilterTextChange={setFilterText} 
+        onInStockOnlyChange={setInStockOnly} />
       <ProductTable 
-        products={products}
+        products={props.products}
         filterText={filterText}
         inStockOnly={inStockOnly} />
     </div>
   );
 }
 
-function ProductCategoryRow({ category } : any) {
+function ProductCategoryRow({ category } : {category:string}) {
   return (
     <tr>
       <th colSpan={2}>
@@ -27,7 +29,7 @@ function ProductCategoryRow({ category } : any) {
   );
 }
 
-function ProductRow({ product } : any) {
+function ProductRow({ product } : {product:{ name: string, stocked: boolean, category: string, price: string}}) {
   const name = product.stocked ? product.name :
     <span style={{ color: 'red' }}>
       {product.name}
@@ -42,10 +44,10 @@ function ProductRow({ product } : any) {
 }
 
 function ProductTable({ products, filterText, inStockOnly } : any) {
-  const rows : any = [];
+  const rows : Array<any> = [];
   let lastCategory : string | null= null;
 
-  products.forEach((product : any) => {
+  products.forEach((product : { name: string, stocked: boolean, category: string, price: string}) => {
     if (
       product.name.toLowerCase().indexOf(
         filterText.toLowerCase()
@@ -108,7 +110,7 @@ function SearchBar({
   );
 }
 
-const PRODUCTS = [
+const PRODUCTS :{}[]= [
   {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
   {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
   {category: "Fruits", price: "$2", stocked: false, name: "Passionfruit"},
